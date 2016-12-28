@@ -19,12 +19,6 @@ npm install yarn -g
 支持*.vue文件中的html、js、css语法高亮和提示。  
 在File --> Settings --> Plugins --> 底部Browse repositories 中搜索Vue.js并安装
 
-### LiveReload
-
-在编辑资源文件后自动刷新浏览器。
-[安装地址](https://chrome.google.com/webstore/detail/livereload/jnihajbhpnppcggbcgedagnkighmdlei/related?hl=zh-CN)
-打开网页后，要点一下浏览器上的小图标，中间的圆点为实心表示正在运行
-
 ### vue-devtools
 
 可以在控制台查看vue实例的状态的调试工具。
@@ -45,28 +39,18 @@ node server/app.js
 
 ----
 
-## 2.发布到测试环境
-一键发布：最好先把自己的修改提交了，否则会和自动提交的内容混在一起
-```
-gulp publish-develop
-```
-
-----
-
-## 3.发布到正式环境
+## 2.发布到正式环境
 一键发布：最好先把自己的修改提交了，否则会和自动提交的内容混在一起
 ```
 gulp publish-master
-登录服务器，进入项目目录
-运行update.sh
 ```
 
 ----
 
-## 4.线上环境启动命令
+## 3.线上环境启动命令
 ```
-yarn install --production --unsafe-perm
-yarn run start或yarn run start-dev
+yarn install --production
+yarn run start
 ```
 
 ----

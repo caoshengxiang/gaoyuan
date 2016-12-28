@@ -1,0 +1,204 @@
+@import "./basic_const";
+@import "./font-mixin";
+
+html {
+    box-sizing: border-box;
+    height: 100%;
+}
+
+*, *:before, *:after {
+    box-sizing: inherit;
+}
+
+body {
+    @include default-font-regular;
+    height: 100%;
+}
+
+h1, h2, h3, h4, h5, h6, p {
+    margin: 0;
+}
+
+ul {
+    margin: 0;
+    padding-left: 0;
+}
+
+li {
+    list-style: none;
+}
+
+// vue编译结束前不显示带v-cloak的标签
+[v-cloak] {
+    display: none !important;
+}
+
+button {
+    @include default-font-regular;
+    border: none;
+    outline: none;
+    cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+}
+
+input, textarea {
+    @include default-font-regular;
+    outline: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    -ms-appearance: none;
+    appearance: none;
+    -webkit-tap-highlight-color: transparent;
+}
+
+.no-highlight {
+    outline: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    -ms-appearance: none;
+    appearance: none;
+    -webkit-tap-highlight-color: transparent;
+}
+
+input[type="checkbox"] {
+    width: 14px;
+    height: 14px;
+    border: none;
+    border-radius: 0;
+    margin-right: 4px;
+    background: url(/static/images/checkbox_normal.svg) center;
+    background-size: cover;
+    vertical-align: middle;
+    cursor: pointer;
+
+    &:checked {
+        background-image: url(/static/images/checkbox_checked.svg);
+    }
+}
+
+input[type="radio"] {
+    width: 14px;
+    height: 14px;
+    border: none;
+    border-radius: 0;
+    margin-right: 4px;
+    background: url(/static/images/radio_normal.svg) center;
+    background-size: cover;
+    vertical-align: middle;
+    cursor: pointer;
+
+    &:checked {
+        background-image: url(/static/images/radio_checked.svg);
+    }
+}
+
+input[type=text], input[type=number], input[type=date], input[type=month] {
+    border: 1px solid;
+    &::-webkit-input-placeholder {
+        color: $text-hint;
+    }
+    &::-moz-placeholder {
+        color: $text-hint;
+    }
+    &:-ms-input-placeholder {
+        color: $text-hint;
+    }
+    &[readonly] {
+        background: #e7e9eb;
+    }
+}
+
+label {
+    -webkit-tap-highlight-color: transparent;
+}
+
+// 内部全是float元素的容器，解决容器没有宽高的问题
+.float-container {
+    zoom: 1;
+    &::after {
+        display: block;
+        content: ' ';
+        height: 0;
+        clear: both;
+        visibility: hidden;
+    }
+}
+
+.float-left {
+    float: left;
+}
+
+.float-right {
+    float: right;
+}
+
+.clickable {
+    cursor: pointer;
+}
+
+.hidden {
+    display: none;
+}
+
+/***********************常用样式***********************/
+
+.normal-button {
+    @include button;
+    color: #0087d8;
+    background-color: #fff;
+    border-color: #0087d8;
+    &:hover, &.zeroclipboard-is-hover {
+        color: #fff;
+        background-color: #0087d8;
+    }
+    &.disabled {
+        color: #d1e5f9;
+        border-color: #a9c7d8;
+    }
+
+    &.primary {
+        color: #fff;
+        background-color: #4394e8;
+        border-color: #0087d8;
+        &:hover, &.zeroclipboard-is-hover {
+            background-color: #55aaee;
+        }
+        &:active, &.zeroclipboard-is-active {
+            background-color: #337ee2;
+        }
+        &.disabled {
+            background-color: #d1e5f9;
+            border-color: #a9c7d8;
+        }
+    }
+    &.secondary {
+        color: #fff;
+        background-color: #63c59e;
+        border-color: #55a988;
+        &:hover, &.zeroclipboard-is-hover {
+            background-color: #7ad3b3;
+        }
+        &:active, &.zeroclipboard-is-active {
+            background-color: #4eb689;
+        }
+        &.disabled {
+            background-color: #d9f1e7;
+            border-color: #a6d2c1;
+        }
+    }
+    &.gray {
+        color: #758392;
+        background: #fff;
+        border-color: #d0d4da;
+        &:hover, &:focus {
+            color: #fff;
+            background-color: #d0d4da;
+            border-color: #d0d4da;
+        }
+    }
+}
+
+//UC 上有一个插件，导致页面显示不完全，出现了滚动条，把它隐藏掉，哼哼
+#trans-tooltip, #tip-arrow-bottom, #tip-arrow-top {
+    display: none;
+}

@@ -1,0 +1,320 @@
+/*
+ *  Remodal - v1.0.7
+ *  Responsive, lightweight, fast, synchronized with CSS animations, fully customizable modal window plugin with declarative configuration and hash tracking.
+ *  http://vodkabears.github.io/remodal/
+ *
+ *  Made by Ilya Makarov
+ *  Under MIT License
+ */
+/* ==========================================================================
+   Remodal's default mobile first theme
+   ========================================================================== */
+@import "./basic_const";
+@import "./font-mixin";
+
+/* Default theme styles for the background */
+
+.remodal-bg {
+    .remodal-is-opening, .remodal-is-opened {
+        filter: blur(3px);
+    }
+}
+
+/* Default theme styles of the overlay */
+
+.remodal-overlay {
+    background: rgba(0, 0, 0, 0.4);
+    .remodal-is-opening, .remodal-is-closing {
+        animation-duration: 0.3s;
+        animation-fill-mode: forwards;
+    }
+    .remodal-is-opening {
+        animation-name: remodal-overlay-opening-keyframes;
+    }
+    .remodal-is-closing {
+        animation-name: remodal-overlay-closing-keyframes;
+    }
+}
+
+/* Default theme styles of the wrapper */
+
+.remodal-wrapper {
+    padding: 10px 23px;
+}
+
+/* Default theme styles of the modal dialog */
+
+.remodal {
+    box-sizing: border-box;
+    max-width: 100%;
+    min-width: 250px;
+
+    transform: translate3d(0, 0, 0);
+
+    color: $text-normal;
+    @include default-font-regular;
+    background: #fff;
+    border-radius: 4px;
+    .remodal-is-opening, .remodal-is-closing {
+        animation-duration: 0.3s;
+        animation-fill-mode: forwards;
+    }
+    .remodal-is-opening {
+        animation-name: remodal-opening-keyframes;
+    }
+    .remodal-is-closing {
+        animation-name: remodal-closing-keyframes;
+    }
+}
+
+/* Vertical align of the modal dialog */
+
+.remodal, .remodal-wrapper:after {
+    vertical-align: middle;
+}
+
+/* Close button */
+
+.remodal-close {
+    position: absolute;
+    top: 0;
+    right: 0;
+
+    display: block;
+    overflow: visible;
+
+    width: 36px;
+    height: 36px;
+    margin: 0;
+    padding: 0;
+
+    cursor: pointer;
+    transition: color 0.2s;
+    text-decoration: none;
+
+    color: $text-normal;
+    border: 0;
+    outline: 0;
+    background: transparent;
+
+    &:hover, &:focus {
+        color: $basic-primary;
+    }
+    &:before {
+        font-family: Arial, "Helvetica CY", "Nimbus Sans L", sans-serif !important;
+        font-size: 25px;
+        display: block;
+        content: "\00d7";
+    }
+}
+
+/* Dialog content */
+
+.remodal {
+    .remodal-title {
+        margin: 30px 0 0;
+        padding: 0 15px;
+        font-size: 18px;
+    }
+    .no-title {
+        .remodal-title {
+            display: none;
+        }
+    }
+    .spinner {
+        margin: 35px auto;
+        display: none;
+    }
+    .loading .spinner {
+        display: block;
+    }
+    .remodal-content {
+        font-size: 15px;
+        padding: 33px 25px 33px;
+    }
+}
+
+/* Dialog buttons */
+
+.remodal-confirm, .remodal-cancel {
+    display: block;
+    overflow: visible;
+
+    margin-bottom: 15px;
+    line-height: 33px;
+    width: calc(50% - 15px * 1.5);
+
+    cursor: pointer;
+    transition: background 0.2s, color 0.2s;
+    text-align: center;
+    vertical-align: middle;
+    text-decoration: none;
+
+    border: 1px solid;
+    outline: 0;
+    font-size: 14px;
+    border-radius: 4px;
+}
+
+.remodal-confirm {
+    float: right;
+    margin-right: 15px;
+    // copy from basic.scss .normal-button.primary
+    color: #fff;
+    background-color: #4394e8;
+    border-color: #0087d8;
+    &:hover {
+        background-color: #55aaee;
+    }
+    &:active {
+        background-color: #337ee2;
+    }
+    &.disabled {
+        background-color: #d1e5f9;
+        border-color: #a9c7d8;
+    }
+    // copy end
+}
+
+.remodal-cancel {
+    float: left;
+    margin-left: 15px;
+    // copy from basic.scss .normal-button.gray
+    color: #758392;
+    background: #fff;
+    border-color: #d0d4da;
+    &:hover, &:focus {
+        color: #fff;
+        background-color: #d0d4da;
+        border-color: #d0d4da;
+    }
+    // copy end
+}
+
+.remodal {
+    .no-ok .remodal-confirm, .no-cancel .remodal-cancel {
+        display: none;
+    }
+    .no-ok .remodal-cancel, .no-cancel .remodal-confirm {
+        display: inline-block;
+        float: none;
+        width: calc(100% - 30px);
+        margin-left: 0;
+        margin-right: 0;
+    }
+    .no-ok.no-cancel .remodal-confirm, .no-ok.no-cancel .remodal-cancel {
+        display: none;
+    }
+}
+
+/* Remove inner padding and border in Firefox 4+ for the button tag. */
+
+.remodal-confirm::-moz-focus-inner,
+.remodal-cancel::-moz-focus-inner,
+.remodal-close::-moz-focus-inner {
+    padding: 0;
+    border: 0;
+}
+
+/* Keyframes
+   ========================================================================== */
+
+@keyframes remodal-opening-keyframes {
+    from {
+        transform: scale(1.05);
+        opacity: 0;
+    }
+    to {
+        transform: none;
+        opacity: 1;
+    }
+}
+
+@keyframes remodal-closing-keyframes {
+    from {
+        transform: scale(1);
+        opacity: 1;
+    }
+    to {
+        transform: scale(0.95);
+        opacity: 0;
+    }
+}
+
+@keyframes remodal-overlay-opening-keyframes {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes remodal-overlay-closing-keyframes {
+    from {
+        opacity: 1;
+    }
+    to {
+        opacity: 0;
+    }
+}
+
+/* Media queries
+   ========================================================================== */
+
+@media (min-width: 401px) {
+    .remodal {
+        min-width: 300px;
+    }
+}
+
+@media only screen and (min-width: 641px) {
+    .remodal {
+        max-width: 700px;
+        min-width: 300px;
+        .remodal-title {
+            margin: 0;
+            font-size: 14px;
+            font-weight: normal;
+            text-align: left;
+            line-height: 30px;
+            border-bottom: 1px solid #eee;
+        }
+        .remodal-content {
+            font-size: 17px;
+        }
+        .no-ok .remodal-cancel, .no-cancel .remodal-confirm {
+            width: 125px;
+        }
+    }
+    .remodal-confirm, .remodal-cancel {
+        margin-bottom: 30px;
+        line-height: 27px;
+    }
+
+    /* Big dialog
+       ========================================================================== */
+    .remodal.big-mode {
+        .remodal-title {
+            padding: 0 35px;
+            font-size: 16px;
+            line-height: 55px;
+        }
+        .remodal-close {
+            width: 76px;
+            height: 55px;
+        }
+    }
+}
+
+/* IE8
+   ========================================================================== */
+
+.lt-ie9 {
+    .remodal-overlay {
+        background: #2b2e38;
+    }
+    .remodal {
+        width: 700px;
+    }
+}

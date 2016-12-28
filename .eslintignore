@@ -1,0 +1,4 @@
+client/admin_pc/libs/*
+public/*
+server/data/*
+server/lib/*

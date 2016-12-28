@@ -1,0 +1,23 @@
+@mixin default-font-thin {
+    font-family: "PingFang SC Thin", "PingFang SC", "Droid Sans Fallback", "Microsoft YaHei Light", "微软雅黑 Light", STXihei, "华文细黑";
+}
+
+@mixin default-font-extralight {
+    font-family: "PingFang SC ExtraLight", "PingFang SC", "Droid Sans Fallback", "Microsoft YaHei Light", "微软雅黑 Light", STXihei, "华文细黑";
+}
+
+@mixin default-font-light {
+    font-family: "PingFang SC Light", "PingFang SC", "Droid Sans Fallback", "Microsoft YaHei Light", "微软雅黑 Light", STXihei, "华文细黑";
+}
+
+@mixin default-font-regular {
+    font-family: "PingFang SC", "Droid Sans Fallback", "Microsoft YaHei", "微软雅黑", STXihei, "华文细黑";
+}
+
+@mixin default-font-semibold {
+    font-family: "PingFang SC Semibold", "PingFang SC", "Droid Sans Fallback", "Microsoft YaHei Bold", "微软雅黑 Bold", STXihei, "华文细黑";
+}
+
+@mixin default-font-bold {
+    font-family: "PingFang SC Bold", "PingFang SC", "Droid Sans Fallback", "Microsoft YaHei Bold", "微软雅黑 Bold", STXihei, "华文细黑";
+}

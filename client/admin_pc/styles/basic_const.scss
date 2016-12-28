@@ -1,0 +1,42 @@
+/*********************视觉设计规范*********************/
+
+// 基本-主色
+$basic-primary: #4394e8;
+// 基本-辅色
+$basic-secondary: #63c59e;
+// 基本-提示色
+$basic-warning: #fb6473;
+
+// 基本-弱提示
+$basic-weak: #8ebff1;
+// 基本-高亮态
+$basic-selected: #dbebfb;
+// 基本-背景色
+$basic-body: #e9eef5;
+
+// 文字-正文
+$text-normal: #758392;
+// 文字-弱提示
+$text-hint: #c1c7cd;
+// 文字-凸显
+$text-highlight: #4394e8;
+
+// 线框-分隔线
+$line-separator: #def0f2;
+// 线框-表单框线
+$line-border: #d0d4da;
+// 线框-弹出框背景色
+$dlg-background: #f6f9fc;
+
+/***********************常用样式***********************/
+
+@mixin button {
+    text-decoration: none;
+    border: 1px solid;
+    border-radius: 4px;
+    cursor: pointer;
+    outline: none;
+    &.disabled {
+        cursor: default;
+    }
+}
