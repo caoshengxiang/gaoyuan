@@ -143,7 +143,7 @@
     errorCode.SIGNIN_FAIL = defineCode(3006, '账号或密码错误', false);
 
     /** 账号格式错误 */
-    errorCode.SIGNIN_PHONE_INVALID = defineCode(3007, '账号填写错误', false);
+    errorCode.SIGNIN_ACCOUNT_INVALID = defineCode(3007, '账号填写错误', false);
 
     /** 密码格式错误 */
     errorCode.SIGNIN_PASSWORD_INVALID = defineCode(3008, '密码填写错误', false);
@@ -168,6 +168,9 @@
 
     /** 创建openId时出错 */
     errorCode.CREATE_OPENID_ERROR = defineCode(3027);
+
+    /** 用户已存在 */
+    errorCode.USER_HAS_EXISTED = defineCode(3031, '用户已存在');
 
     /** 用户不存在 */
     errorCode.USER_NOT_EXIST = defineCode(3032, '用户不存在');

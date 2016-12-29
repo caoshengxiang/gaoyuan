@@ -8,16 +8,9 @@ const CHARS = 'GQM5s7KdZhr8zFV3X4CHfU6kIq2cgTBDnoJamSyNOeYW9Rt01pLblvwiuPExjA';
 const CHARS_HUMAN_FRIENDLY = 'ABCDEFGHJKMNPQRSTWXYZabcdefhijkmnprstwxyz2345678';
 const FINAL_RADIX = CHARS.length;
 
-const TYPE_MEMBER = 1;
-const TYPE_MEETING = 2;
-const TYPE_FORM = 3;
-const TYPE_REAL_USER = 4;
-const TYPE_SESSIONKEY = 5;
-const TYPE_TRADE_NUMBER = 6;
-const TYPE_TICKET = 7;
-const TYPE_QUESTION = 8;
-const TYPE_ACTION = 9;
-const TYPE_MAX = 9; // 遍历用的最大值
+const TYPE_ACCOUNT = 1;
+const TYPE_SESSIONKEY = 2;
+const TYPE_MAX = 2; // 遍历用的最大值
 
 // snowflake的参数
 const sfConfig = {};
@@ -190,35 +183,11 @@ exports.randomNumber = function(min, max) {
 }
 
 /**
- * 获取会员openId
+ * 获取账号openId
  * @returns {string}
  */
-exports.createMemberOpenId = function() {
-    return createOpenId(TYPE_MEMBER);
-};
-
-/**
- * 获取会议openId
- * @returns {string}
- */
-exports.createMeetingOpenId = function() {
-    return createOpenId(TYPE_MEETING);
-};
-
-/**
- * 获取表单openId
- * @returns {string}
- */
-exports.createFormOpenId = function() {
-    return createOpenId(TYPE_FORM);
-};
-
-/**
- * 获取真实注册用户的openId
- * @returns {string}
- */
-exports.createRealUserOpenId = function() {
-    return createOpenId(TYPE_REAL_USER);
+exports.createAccountOpenId = function() {
+    return createOpenId(TYPE_ACCOUNT);
 };
 
 /**
@@ -228,37 +197,5 @@ exports.createRealUserOpenId = function() {
 exports.createSessionKey = function() {
     return createOpenId(TYPE_SESSIONKEY);
 };
-
-/**
- * 获取唯一订单号
- * @returns {string}
- */
-exports.createTradeNumber = function() {
-    return createOpenId(TYPE_TRADE_NUMBER);
-};
-
-/**
- * 获取ticketOpenId
- * @returns {string}
- */
-exports.createTicketOpenId = function() {
-    return createOpenId(TYPE_TICKET);
-}
-
-/**
- * 获取表单问题的openId
- * @returns {string}
- */
-exports.createQuestionOpenId = function() {
-    return createOpenId(TYPE_QUESTION);
-}
-
-/**
- * 获取活动openId
- * @returns {string}
- */
-exports.createActionOpenId = function() {
-    return createOpenId(TYPE_ACTION);
-}
 
 initSnowflakeConfig();

@@ -10,7 +10,7 @@ require('./global');
 const historyFallback = require('./routes/history_api_fallback');
 const templateRender = require('./routes/render');
 const browserInfo = require('./routes/utils/browser_info');
-const authenticator = require('./routes/sign/authenticator');
+const authenticator = require('./routes/account/authenticator');
 const dbManager = require('./db_utils');
 const errorHandler = require('./error_handler');
 console.log(`已载入${gConfig.is_server ? '服务器' : '开发机'}${gConfig.dev ? '测试环境' : '正式环境'}配置`);

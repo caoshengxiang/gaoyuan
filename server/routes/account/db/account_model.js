@@ -4,14 +4,19 @@
 
 const Promise = require('bluebird');
 const dbUtils = require('./../../../db_utils');
-const accountSchemaUtils = require('./account_schema_utils');
 const DbTaskQueueManager = require('../../utils/db_task_queue');
+const openIdGenerator = require('../../../openid_generator');
+const accountSchemaUtils = require('./account_schema_utils');
+
+exports.ACCOUNT_TYPE = accountSchemaUtils.ACCOUNT_TYPE;
+// 默认session过期时间
+exports.SESSION_TIME_OUT = 30 * 24 * 60 * 60 * 1000;
 
 // 数据读写任务队列
 const accountQueue = new DbTaskQueueManager();
 // 用户model
-const accountModel = dbUtils.createModel(dbUtils.dbName.Account, accountSchemaUtils.accountSchema);
-exports.accountModel = accountModel;
+const AccountModel = dbUtils.createModel(dbUtils.dbName.Account, accountSchemaUtils.accountSchema);
+exports.AccountModel = AccountModel;
 
 /** ********************外露接口************************ */
 
@@ -20,31 +25,29 @@ exports.accountModel = accountModel;
  * @param {string} accountOpenId 用户openId
  * @returns {Promise}
  */
-exports.getAccount = function (accountOpenId) {
+exports.getAccount = function(accountOpenId) {
     if (!accountOpenId) {
         return Promise.reject(new MError(MError.PARAMETER_ERROR, `accountOpenId: ${accountOpenId}`));
     }
-    return accountModel.findOne({accountOpenId})
+    return AccountModel.findOne({accountOpenId})
         .catch((error) => {
             throw new MError(MError.ACESS_DATABASE_ERROR, error);
         })
-        .then(gFilterDocument);
 }
 
 /**
  * 获取用户的document
- * @param {string} account 用户账号
+ * @param {string} name 用户账号
  * @returns {Promise}
  */
-exports.findAccountForSignIn = function (account) {
-    if (!account) {
-        return Promise.reject(new MError(MError.PARAMETER_ERROR, `account: ${account}`));
+exports.getAccountByName = function(name) {
+    if (!name) {
+        return Promise.reject(new MError(MError.PARAMETER_ERROR, `name: ${name}`));
     }
-    return accountModel.findOne({account})
+    return AccountModel.findOne({name})
         .catch((error) => {
             throw new MError(MError.ACESS_DATABASE_ERROR, error);
         })
-        .then(gFilterDocument);
 }
 
 /**
@@ -52,29 +55,24 @@ exports.findAccountForSignIn = function (account) {
  * @param {accountSchema} account
  * @returns {Promise}
  */
-exports.saveNewAccount = function (account) {
+exports.saveNewAccount = function(account) {
     if (!account) {
         return Promise.reject(new MError(MError.PARAMETER_ERROR, 'no account'));
     }
-    account = gFilterDocument(account);
-    return accountModel.insert({
-        account: account.account,
-        isDeleted: false
-    }, account)
+    return account.save()
         .catch((error) => {
             throw new MError(MError.ACESS_DATABASE_ERROR, error);
         })
-        .then(gFilterDocument);
 }
 
 /**
  * 增加新sessionKey
- * @param {Object} sessionKey
- * @param {String} phone
+ * @param {Object} session
+ * @param {String} accountOpenId
  * @returns {Promise} 返回完整的account对象
  */
-exports.addSessionKey = function (sessionKey, phone) {
-    if (!sessionKey) {
+exports.addSession = function(session, accountOpenId) {
+    if (!session) {
         return Promise.reject(new MError(MError.PARAMETER_ERROR, 'no sessionKey'));
     }
     const options = {
@@ -85,10 +83,9 @@ exports.addSessionKey = function (sessionKey, phone) {
         upsert: false
     };
 
-    return accountModel.findOneAndUpdate({
-        phone,
-        isDeleted: false
-    }, {$push: {sessionKey}}, options)
+    // TODO 这里的push不对吧？应该是向sessionKey数组里面push吧
+    // return AccountModel.findOneAndUpdate({accountOpenId}, {$push: {sessions: session}}, options)
+    return AccountModel.findOneAndUpdate({accountOpenId}, {$push: {session}}, options)
         .catch((error) => {
             throw new MError(MError.ACESS_DATABASE_ERROR, error);
         })
@@ -96,61 +93,53 @@ exports.addSessionKey = function (sessionKey, phone) {
 }
 
 /**
- * 删除一个sessionKey
- * @param {Object} sessionKey
- * @param {String} accountOpenId
- * @returns {Promise}
- */
-exports.delSessionKey = function (sessionKey, accountOpenId) {
-    if (!sessionKey) {
-        return Promise.reject(new MError(MError.PARAMETER_ERROR, 'no sessionKey'));
-    }
-    const options = {
-        // Return the document after updates are applied
-        new: true,
-        // Create a document if one isn't found. Required
-        // for `setDefaultsOnInsert`
-        upsert: false
-    };
-
-    return accountModel.findOneAndUpdate({
-        accountOpenId,
-        isDeleted: false
-    }, {$pull: {sessionKey: {key: sessionKey}}}, options)
-        .catch((error) => {
-            throw new MError(MError.ACESS_DATABASE_ERROR, error);
-        })
-        .then(gFilterDocument);
-}
-
-/**
- * 查询sessionKey
- * @param {string} accountOpenId 手机号
+ * 查询session对象
  * @param {string} sessionKey
  * @returns {Promise}
  */
-exports.findSessionKey = function (accountOpenId, sessionKey) {
-    if (!accountOpenId) {
-        return Promise.reject(new MError(MError.PARAMETER_ERROR, 'no accountOpenId'));
+exports.findSession = function(sessionKey) {
+    if (!sessionKey) {
+        return Promise.reject(new MError(MError.PARAMETER_ERROR, 'no sessionKey'));
     }
 
-    return accountModel.findOne({
-        accountOpenId,
-        'sessionKey.key': sessionKey,
-        isDeleted: false
+    return AccountModel.findOne({
+        'sessions.key': sessionKey
     })
-        .select('sessionKey.$')
+        .select('sessions.$')
         .catch((error) => {
             throw new MError(MError.ACESS_DATABASE_ERROR, error);
         })
-        .then(gFilterDocument);
 }
 
 /**
  * 创建一个数据库使用的用户信息document对象
- * @param {object} account
+ * @param {string} name 登录账户名
+ * @param {string} password 密码
+ * @param {number} type 账号类型
  * @returns {accountSchema}
  */
-exports.createAccountDoc = function (account) {
-    return new accountModel(account);
+exports.createAccountDoc = function(name, password, type) {
+    return new AccountModel({
+        accountOpenId: openIdGenerator.createAccountOpenId(),
+        sessionKey: [],
+        name,
+        password,
+        // TODO 改用cdn路径
+        avatar: `${gConfig.host}/static/images/default_avatar.png`,
+        type,
+    });
+}
+
+/**
+ * 创建一个session
+ * @param {string} ip 登录时的ip地址
+ * @return {{key: string, expireAt: Date, ip: *, data: {}}}
+ */
+exports.createSession = function(ip) {
+    return {
+        key: openIdGenerator.createSessionKey(),
+        expireAt: new Date(Date.now() + exports.SESSION_TIME_OUT),
+        ip,
+        data: {},
+    }
 }

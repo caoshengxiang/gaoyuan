@@ -1,30 +1,15 @@
 /**
- * Created by gukong on 16/7/20.
+ * Created by lnk on 16/12/30.
  */
-const profileModel = require('./db/account_model');
-const subtask = require('./subtask');
-
-exports.findProfileById = function(profileOpenId) {
-    return profileModel.getProfile(profileOpenId)
-        .catch(MError.prependCodeLine());
-}
+const accountDb = require('./db/account_model');
 
 /**
- * 创建用户信息
- * @param phoneNum
- * @param properties
- * @param profileSrc
- * @returns {*}
+ * 获取用户的document
+ * @param {string} accountOpenId 用户openId
+ * @returns {Promise}
  */
-exports.createUserInfo = function(phoneNum, properties) {
-    return profileModel.findProfileByPhone(phoneNum)
-        .then((profile) => {
-            if (!profile) {
-                // profile不存在则创建
-                return subtask.createProfile(phoneNum, properties)
-                    .then(profileModel.saveNewProfile)
-            } else {
-                return profile;
-            }
-        })
+exports.getAccount = function(accountOpenId) {
+    return accountDb.getAccount(accountOpenId)
+        .then(gFilterDocument)
+        .catch(MError.prependCodeLine());
 }
