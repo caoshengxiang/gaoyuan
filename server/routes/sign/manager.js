@@ -2,9 +2,9 @@
  * Created by gukong on 16/5/21.
  */
 const Promise = require('bluebird');
-const profileDb = require('../profile/db/profile_model');
+const accountDb = require('../account/db/account_model');
 const signTask = require('./subtask');
-const profileTask = require('../profile/subtask');
+const accountTask = require('./subtask');
 
 /** *************************************************************** */
 exports.signIn = function(phone, pwd, res) {
@@ -15,8 +15,8 @@ exports.signIn = function(phone, pwd, res) {
         return Promise.reject(new MError(MError.SIGNIN_PASSWORD_INVALID, 'signin->密码格式不对'));
     }
 
-    return profileDb.findProfileByPhone(phone, profileDb.PROFILE_SRC.SIGN_UP)
-        .then(profileDoc => signTask.signIn(profileDoc, pwd, phone))
+    return accountDb.findAccountForSignIn(phone, accountDb.PROFILE_SRC.SIGN_UP)
+        .then(accountDoc => signTask.signIn(accountDoc, pwd, phone))
         .then(result => signHandler(result, res))
         .catch((error) => {
             require('./authenticator').clearCookie(res);
@@ -39,8 +39,8 @@ exports.signUp = function(phone, verifyCode, pwd, name, res) {
         pwd,
         sessionKey: signTask.createSessionKey()
     }
-    return profileTask.createProfile(phone, properties)
-        .then(profileDb.saveNewProfile)
+    return accountTask.createProfile(phone, properties)
+        .then(accountDb.saveNewProfile)
         .then((doc) => {
             doc.currentSessionKey = doc.sessionKey[0].key;
             return doc;
@@ -49,21 +49,21 @@ exports.signUp = function(phone, verifyCode, pwd, name, res) {
 }
 
 exports.signOut = function(openId, sessionKey, res) {
-    return profileDb.delSessionKey(sessionKey, openId)
+    return accountDb.delSessionKey(sessionKey, openId)
         .then(() => require('./authenticator').clearCookie(res));
 }
 
 function signHandler(result, res) {
-    if (!result.profileOpenId) {
-        return Promise.reject(new MError(MError.LOGIN_NO_OPENID, 'no profileOpenId'));
+    if (!result.accountOpenId) {
+        return Promise.reject(new MError(MError.LOGIN_NO_OPENID, 'no accountOpenId'));
     } else if (!result.currentSessionKey) {
         return Promise.reject(new MError(MError.LOGIN_NO_SESSION_KEY, 'no currentSessionKey'));
     }
 
-    console.log('new sessionkey:', result.currentSessionKey, 'new openid:', result.profileOpenId);
+    console.log('new sessionkey:', result.currentSessionKey, 'new openid:', result.accountOpenId);
 
     const cookieOptions = {maxAge: 2592000000, httpOnly: true};
-    res.cookie('meetin_ui', result.profileOpenId, cookieOptions);
+    res.cookie('meetin_ui', result.accountOpenId, cookieOptions);
     res.cookie('meetin_sk', result.currentSessionKey, cookieOptions);
     res.cookie('meetin_hu', result.avatar, cookieOptions);
     res.cookie('meetin_nm', result.name, cookieOptions);

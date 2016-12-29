@@ -67,7 +67,7 @@ const configure = {
         ],
         replaceConsole: true
     },
-    mongo_db_address: 'mongodb://root:[ServerPassword]@dds-m5e410e6371755042.mongodb.rds.aliyuncs.com:3717,dds-m5e410e6371755041.mongodb.rds.aliyuncs.com:3717/admin?replicaSet=mgset-1614947',
+    mongo_db_address: 'mongodb://root:[ServerPassword]@dds-m5e410e6371755042.mongodb.rds.aliyuncs.com:3717,dds-m5e410e6371755041.mongodb.rds.aliyuncs.com:3717/meetin_admin?replicaSet=mgset-1614947',
     // 默认超时时间必须比网页端超时时间短
     default_packet_timeout: 30000,
 };

@@ -30,6 +30,10 @@ const configure = {
     mongo_db_address: 'mongodb://localhost:25916/meetin_web_db',
 };
 
+if (process.env.USER === 'lnk') {
+    configure.host = 'http://192.168.31.205:29862';
+}
+
 // 日志打印文件和行号
 function logTokensFunc() {
     const codePos = gGetCodePosition(10);

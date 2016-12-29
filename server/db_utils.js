@@ -49,7 +49,7 @@ defaultDb.db.once('close', () => {
  * 数据库的名字，统一放在这里是为避免外键引用时写错对方名字
  */
 exports.dbName = {
-    Profile: 'Profile',
+    Account: 'Account',
 }
 
 /**

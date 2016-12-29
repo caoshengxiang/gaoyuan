@@ -4,11 +4,9 @@
 
 const Promise = require('bluebird');
 const openIdGenerator = require('../../openid_generator');
-const profileDb = require('../profile/db/profile_model');
+const accountDb = require('../account/db/account_model');
 
 const SESSION_TIME_OUT = 30 * 24 * 60 * 60 * 1000;
-const CAPTCHA_TIME_OUT = 10 * 60 * 1000;
-const CAPTCHA_MIN_SEND_TIME_SECONDS = 60;
 
 /**
  * 创建一个sessionKey
@@ -22,17 +20,17 @@ exports.createSessionKey = function() {
 }
 
 /**
- * 登录，成功返回带登录态的完整profile，失败返回null
- * @param {profileSchema} profileDoc
+ * 登录，成功返回带登录态的完整account，失败返回null
+ * @param {accountSchema} accountDoc
  * @param {string} pwd
  * @param {string} phone
  * @returns {null|Promise}
  */
-exports.signIn = function(profileDoc, pwd, phone) {
-    if (!profileDoc) {
+exports.signIn = function(accountDoc, pwd, phone) {
+    if (!accountDoc) {
         return Promise.reject(new MError(MError.SIGNIN_FAIL, '手机号错误或未注册'));
     }
-    if (profileDoc.password != pwd) {
+    if (accountDoc.password != pwd) {
         return Promise.reject(new MError(MError.SIGNIN_FAIL, '密码错误'));
     }
     // 密码正确
@@ -40,7 +38,7 @@ exports.signIn = function(profileDoc, pwd, phone) {
         key: openIdGenerator.createSessionKey(),
         expireStamp: Date.now() + SESSION_TIME_OUT
     };
-    return profileDb.addSessionKey(newSessionKeyObj, phone)
+    return accountDb.addSessionKey(newSessionKeyObj, phone)
         .then((result) => {
             result.currentSessionKey = newSessionKeyObj.key;
             return result;
