@@ -27,11 +27,6 @@ module.exports = {
     },
     // add your custom rules here
     rules: {
-        // import时不加后缀名
-        'import/extensions': [2, 'always', {
-            js: 'never',
-            vue: 'never'
-        }],
         // 生产环境禁止debugger语句
         // TODO
         'no-debugger': process.env.NODE_ENV === 'production' ? 2 : 0,

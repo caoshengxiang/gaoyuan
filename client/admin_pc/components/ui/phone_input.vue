@@ -13,7 +13,7 @@
 
 <script type="text/babel">
     import specialLogic from 'common/special_logic';
-    import limitInput from './limit_input';
+    import limitInput from './limit_input.vue';
 
     // 输入数据合法性改变的事件
     const VALID_CHANGED = 'valid-changed';

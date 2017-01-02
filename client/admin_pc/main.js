@@ -4,7 +4,7 @@ import Vue from 'vue';
 //noinspection ES6UnusedImports
 import debugNotify from './utils/debug_notify';
 import commonUtils from './utils/common_utils';
-import App from './app';
+import App from './app.vue';
 
 /** *****************全局变量****************** */
 window.Vue = Vue;

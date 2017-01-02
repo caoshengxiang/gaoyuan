@@ -9,7 +9,7 @@
 </template>
 
 <script type="text/babel">
-    import remodal from '../components/ui/remodal';
+    import remodal from '../components/ui/remodal.vue';
     import debugNotify from '../utils/debug_notify';
 
     export default {

@@ -1,6 +1,6 @@
 import VueRouter from 'vue-router';
-import index from './pages/index';
-import page404 from './pages/404';
+import index from './pages/index.vue';
+import page404 from './pages/404.vue';
 
 // 定义路由映射。 其中"component" 可以是通过 Vue.extend() 创建的组件构造器，或者组件配置对象
 const routes = [
