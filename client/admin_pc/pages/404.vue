@@ -10,7 +10,7 @@
 
 <script type="text/babel">
     import remodal from '../components/ui/remodal';
-    import commonUtils from '../utils/common_utils';
+    import debugNotify from '../utils/debug_notify';
 
     export default {
         data() {
@@ -20,7 +20,7 @@
             remodal,
         },
         mounted() {
-            commonUtils.showInfo(this.$route.fullPath);
+            debugNotify.showInfo(this.$route.fullPath);
         }
     }
 </script>

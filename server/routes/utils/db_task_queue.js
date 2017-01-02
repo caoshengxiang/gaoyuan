@@ -62,7 +62,7 @@ class DbTask extends EventEmitter {
 
     /**
      * 运行任务完成事件，会通知运行完成监听器
-     * @param {object, optional} result 任务运行结果
+     * @param {object} [result] 任务运行结果
      */
     onFinish(result) {
         if (this.showLog) {
@@ -213,7 +213,7 @@ class DbTaskQueue extends Array {
  */
 class DbTaskQueueManager {
     /**
-     * @param {boolean,optional} showLog 是否打印日志
+     * @param {boolean} [showLog = false] 是否打印日志
      */
     constructor(showLog = false) {
         this.queueMap = {};
@@ -223,7 +223,7 @@ class DbTaskQueueManager {
     /**
      * 创建或获取任务队列
      * @param {string} id 队列id
-     * @param {number,optional} maxSize 队列中的最大任务数
+     * @param {number} [maxSize = 100] 队列中的最大任务数
      * @return {DbTaskQueue}
      */
     createDbTaskQueue(id, maxSize = 100) {
@@ -236,11 +236,17 @@ class DbTaskQueueManager {
     }
 
     /**
-     * 创建一个任务，并将起放入队列运行。这个任务应该只进行一次数据库读写
+     * task任务体方法
+     * @callback taskFunc
+     * @param {*|null} lastTaskResult 上一个任务体执行完成时在promise中返回的数据
+     * @return {Promise} 通过此promise获取任务运行完成时机，也可以在此promise中返回查询到的数据等，会被传下一个taskFunc
+     */
+    /**
+     * 创建一个任务，并将其放入队列运行。这个任务应该只进行一次数据库读写
      * @param {string} queueId 所在队列的id
      * @param {string} name 任务名，查bug时用
-     * @param {Function[]} taskFuncs 任务体数组，会排队运行。该方法参数为lastTaskResult，上一个任务执行完成时返回的数据。需要返回Promise对象。如果有一个任务失败了，就会跳过剩余的任务
-     * @param {number,optional} timeout 超时时间
+     * @param {taskFunc[]} taskFuncs 任务体数组，会排队运行。如果有一个任务失败了，就会跳过剩余的任务
+     * @param {number} [timeout = 8000] 超时时间
      * @return {Promise} 该任务运行完成时的回调，会在队列外运行
      */
     pushTasks(queueId, name, taskFuncs, timeout = 8000) {

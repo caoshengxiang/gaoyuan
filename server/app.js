@@ -100,7 +100,9 @@ function isEmptyObject(obj) {
 app.use(compression());
 // 设置静态资源目录
 app.use(express.static(gConfig.web_static_dir));
-app.use(favicon(path.join(__dirname, '..', 'public', 'static', 'favicon.ico')));
+if (gConfig.favicon_path) {
+    app.use(favicon(gConfig.favicon_path));
+}
 
 // 识别设备信息，并存入全局变量res.locals中
 app.use(browserInfo.parseUserAgent);

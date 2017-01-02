@@ -36,8 +36,10 @@ function setupWebpackMiddleware(app, webpackConfig, hmrPath) {
     // 将webpack编译结果放在内存中，并监听变化
     app.use(webpackDevMiddleware(compiler, {
         publicPath,
-        // 不显示初次编译时的那一坨日志
+        // 不显示初次编译时的那一坨日志，只显示error（目前失效了）
         noInfo: true,
+        // 不显示任何日志
+        quiet: true,
     }))
 
     // 热加载

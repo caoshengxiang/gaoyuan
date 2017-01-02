@@ -4,6 +4,17 @@
 const accountDb = require('../account/db/account_model');
 const subtask = require('./subtask');
 
+// 不用检测登录态的请求
+const whiteList = [
+    '/404.html',
+    '/error.html',
+    // TODO 不存在该页面了
+    '/sign/signin.html',
+    '/account/signin',
+    '/account/signup',
+    '/account/signout',
+];
+
 /**
  * 校验各请求的登录态
  * @param req
@@ -11,9 +22,12 @@ const subtask = require('./subtask');
  * @param next
  */
 exports.authenticate = (req, res, next) => {
-    // TODO 登录页面相关请求不用检测登录态
-    if (![].includes(req.path)) {
-        res.locals.session = {};
+    // TODO 测试数据
+    next();
+    return;
+
+    if (whiteList.includes(req.path)) {
+        // 不用检测登录态
         next();
     } else if (req.cookies.meetin_admin_sk) {
         // 已登录
@@ -47,7 +61,7 @@ exports.authenticate = (req, res, next) => {
  * @param {object} res
  * @returns {Promise}
  */
-exports.signIn = function(name, password, ip, res) {
+exports.signIn = function (name, password, ip, res) {
     if (!name || !password) {
         return Promise.reject(new MError(MError.SIGNIN_FAIL, `name:${name} password:${password}`));
     }
@@ -70,7 +84,7 @@ exports.signIn = function(name, password, ip, res) {
  * @param {object} res
  * @returns {Promise}
  */
-exports.signUp = function(name, password, ip, res) {
+exports.signUp = function (name, password, ip, res) {
     if (!name || name.length < 3) {
         return Promise.reject(new MError(MError.SIGNIN_ACCOUNT_INVALID));
     }
@@ -93,7 +107,7 @@ exports.signUp = function(name, password, ip, res) {
  * @param {object} res
  * @returns {Promise}
  */
-exports.signOut = function(sessionKey, res) {
+exports.signOut = function (sessionKey, res) {
     // 数据库中的session对象不清除了。作为登录历史留在那吧
     return clearCookie(res);
 }
