@@ -19,7 +19,6 @@
             document.title = binding.value
         }
     })
-
     export default {
         // store,
         data() {

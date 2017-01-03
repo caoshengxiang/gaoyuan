@@ -1,22 +1,57 @@
 import VueRouter from 'vue-router';
-import index from './pages/index.vue';
+import indexPage from './pages/admin/index.vue';
 import page404 from './pages/404.vue';
+import signIn from './pages/signIn.vue';
+import games from './pages/games/games.vue';
+import inviteCard from './pages/invite/invite_card.vue'
+import member from './pages/member/menber.vue'
+import accountGeneration from './pages/account_generation/account_generation.vue'
 
 // 定义路由映射。 其中"component" 可以是通过 Vue.extend() 创建的组件构造器，或者组件配置对象
 const routes = [
-    // {
-    //     path: '',
-    //     component: index,
-    //     children: [
-    //         {
-    //             path: '',
-    //             component: indexImg,
-    //         }
-    //     ]
-    // },
+    {
+        path: '',
+        component: indexPage,
+        children: [
+            {
+                path: '',
+                component: games
+            }
+        ]
+    },
+    {
+        path: '/login',
+        component: signIn,
+    },
     {
         path: '/app',
-        component: index,
+        component: indexPage,
+        children: [
+            {
+                path: '',
+                component: games
+            },
+            {
+                path: 'games',
+                component: games
+            },
+            {
+                path: 'invite',
+                component: inviteCard
+            },
+            {
+                path: 'member',
+                component: member
+            },
+            {
+                path: 'employee',
+                component: accountGeneration
+            }
+        ]
+    },
+    // {
+    //     path: '/app',
+    //     component: index,
         // children: [
         //     {
         //         path: '',
@@ -27,8 +62,8 @@ const routes = [
         //         component: indexImg,
         //     },
         // ],
-        meta: {}
-    },
+        // meta: {}
+    // },
     // 必须放最后
     {path: '*', component: page404, meta: {}},
 ]
